@@ -1,0 +1,32 @@
+<apex:page showHeader="false" standardController="Account" extensions="CustomExtension">
+    <!-- Contacts List -->
+    <apex:form>
+        <apex:outputText value="AccountID: {!accountId}"/>
+        <br/>
+        <apex:outputText value="recordTypeName: {!recordTypeName}"/>
+        <br/>
+        <apex:outputText value="isMaster: {!isMaster}"/>
+        <br/>
+        <apex:outputText value="defaultRecordType: {!defaultRecordType}"/>
+        <apex:pageBlock>
+            <apex:actionFunction name="refreshPageSize" action="{!refreshPageSize}" reRender="pbId,pgId" />
+            <apex:pageBlockTable value="{! Contacts }" var="ct" id="pbId">
+                <apex:column value="{! ct.FirstName }" />
+                <apex:column value="{! ct.LastName }" />
+                <apex:column value="{! ct.Email }" />
+                <apex:column value="{! ct.Account.Name }" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:panelGrid columns="8" id="pgId">
+            <apex:selectList value="{!sizeOfRecorsPerPage}" multiselect="false" size="1" onchange="refreshPageSize();">
+                <apex:selectOptions value="{!paginationSizeOptions}" />
+            </apex:selectList>&nbsp;&nbsp;
+            Page:
+            <apex:outputText value="{!setCon.PageNumber} of {! CEILING(setCon.ResultSize / setCon.PageSize)}" />&nbsp;&nbsp;
+            <apex:commandLink action="{! setCon.Previous }" value="« Previous" rendered="{! setCon.HasPrevious }" />&nbsp;&nbsp;
+            <apex:outputText style="color: #ccc;" value="« Previous" rendered="{! NOT(setCon.HasPrevious) }" /> &nbsp;&nbsp;
+            <apex:commandLink  action="{! setCon.Next }" value="Next »" rendered="{! setCon.HasNext }" />
+            <apex:outputText style="color: #ccc;" value="Next »" rendered="{! NOT(setCon.HasNext) }" />
+        </apex:panelGrid>
+    </apex:form>
+</apex:page>
